@@ -152,27 +152,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # https://stackoverflow.com/questions/4375784/log-all-sql-queries
 
-LOGGING = {
-    'version': 1,
-    # 'filters': {
-    #     'require_debug_true': {
-    #         '()': 'django.utils.log.RequireDebugTrue',
-    #     }
-    # },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'filters': [],
-            'class': 'logging.StreamHandler',
-        }
-    },
-    'loggers': {
-        'django.db.backends': {
-            'level': 'DEBUG',
-            'handlers': ['console'],
-        }
-    }
-}
+# LOGGING = {
+#     'version': 1,
+#     # 'filters': {
+#     #     'require_debug_true': {
+#     #         '()': 'django.utils.log.RequireDebugTrue',
+#     #     }
+#     # },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'filters': [],
+#             'class': 'logging.StreamHandler',
+#         }
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'level': 'DEBUG',
+#             'handlers': ['console'],
+#         }
+#     }
+# }
 
 AUTH_USER_MODEL = 'accounts.PetstagramUser'
 
