@@ -51,6 +51,7 @@ PETSTAGRAM_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PETSTAGRAM_APPS
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware'
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -137,9 +138,9 @@ USE_TZ = True
 STATIC_ROOT = BASE_DIR /'staticfiles'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    BASE_DIR / 'mediafiles',
+    BASE_DIR / 'static',
 )
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = BASE_DIR / 'mediafiles/'
 MEDIA_URL = '/media/'
