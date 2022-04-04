@@ -13,6 +13,8 @@ import os.path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from petstagram.utils import is_production
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -20,16 +22,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4)22kgh$9$&q2dkgi)xhf+*j9jf0n9&x3^%(e=q6hblrwo=28x'
+SECRET_KEY = os.getenv('SECRET_KEY', 'sk')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
+APP_ENVIRONMENT = os.getenv('APP_ENVIRONMENT', 'Development')
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    'python-akrad.herokuapp.com'
-]
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(' ')
+#     [
+#     'localhost',
+#     '127.0.0.1',
+#     'python-akrad.herokuapp.com'
+# ]
 
 
 # Application definition
@@ -90,15 +95,25 @@ WSGI_APPLICATION = 'petstagram.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd28m7ugigstmmg',
-        'USER': 'wordyqjalqhrfj',
-        'PASSWORD': '95ce043dc5da7d9488b93594e95359f91c82792a25e1c2df822d5a2a7cb7a767',
-        'HOST': 'ec2-99-80-170-190.eu-west-1.compute.amazonaws.com',
-        'PORT': '5432',
+DEFAULT_DATABASE_CONFIG = {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'db.sqlite3',
+        }
+
+if is_production():
+    DEFAULT_DATABASE_CONFIG = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': os.getenv('DB_HOST', '5432'),
+        }
     }
+
+DATABASES = {
+    'default': DEFAULT_DATABASE_CONFIG
 }
 
 
@@ -107,7 +122,10 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS = []
+
+if is_production():
+    AUTH_PASSWORD_VALIDATORS.extend([
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -120,7 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
-]
+])
 
 
 # Internationalization
@@ -156,27 +174,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # https://stackoverflow.com/questions/4375784/log-all-sql-queries
 
-# LOGGING = {
-#     'version': 1,
-#     # 'filters': {
-#     #     'require_debug_true': {
-#     #         '()': 'django.utils.log.RequireDebugTrue',
-#     #     }
-#     # },
-#     'handlers': {
-#         'console': {
-#             'level': 'DEBUG',
-#             'filters': [],
-#             'class': 'logging.StreamHandler',
-#         }
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'level': 'DEBUG',
-#             'handlers': ['console'],
-#         }
-#     }
-# }
+LOGGING_LEVEL = 'DEBUG'
+
+if is_production():
+    LOGGING_LEVEL = 'INFO'
+# elif is_test():
+#     LOGGING_LEVEL = 'CRITICAL'
+
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'console': {
+            'level': LOGGING_LEVEL,
+            'filters': [],
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': LOGGING_LEVEL,
+            'handlers': ['console'],
+        }
+    }
+}
 
 AUTH_USER_MODEL = 'accounts.PetstagramUser'
 
