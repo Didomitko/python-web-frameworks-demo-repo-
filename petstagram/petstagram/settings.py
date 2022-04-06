@@ -15,7 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import cloudinary
 
-from petstagram.utils import is_production
+from petstagram.utils import is_production, is_test
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -70,6 +70,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'petstagram.common.middleware.count_user_clicks_middleware',
+    'petstagram.common.middleware.last_viewed_pet_photos_middleware',
 ]
 
 ROOT_URLCONF = 'petstagram.urls'
@@ -172,10 +174,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGGING_LEVEL = 'DEBUG'
 
+
 if is_production():
     LOGGING_LEVEL = 'INFO'
-# elif is_test():
-#     LOGGING_LEVEL = 'CRITICAL'
+elif is_test():
+    LOGGING_LEVEL = 'CRITICAL'
 
 LOGGING = {
     'version': 1,

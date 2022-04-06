@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, CreateView
 
@@ -30,8 +30,8 @@ class EditProfileView:
     pass
 
 
-class ChangeUserPasswordView:
-    pass
+class ChangeUserPasswordView(PasswordChangeView):
+    template_name = 'accounts/change_password.html'
 
 
 class ProfileDetailsView(DetailView):
